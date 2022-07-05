@@ -274,7 +274,7 @@ bool RuleBasedStopDecider::CheckADCStop(
 
   if (distance_stop_line_to_adc_front_edge >
       rule_based_stop_decider_config_.max_valid_stop_distance()) {
-    ADEBUG << "not a valid stop. too far from stop line.";
+    AINFO << "not a valid stop. too far from stop line.";
     return false;
   }
 

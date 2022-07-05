@@ -141,6 +141,8 @@ Status SpeedLimitDecider::GetSpeedLimits(
         }
         speed_limit_from_nearby_obstacles =
             nudge_speed_ratio * speed_limit_from_reference_line;
+        // AINFO<<"speed_limit_from_reference_line"<<speed_limit_from_reference_line;
+        // AINFO<<"speed_limit_from_nearby_obstacles"<<speed_limit_from_nearby_obstacles;
         break;
       }
     }

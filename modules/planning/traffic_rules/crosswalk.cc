@@ -179,7 +179,7 @@ void Crosswalk::MakeDecisions(Frame* const frame,
 
       if (stop) {
         pedestrians.push_back(obstacle_id);
-        ADEBUG << "wait for: obstacle_id[" << obstacle_id << "] type["
+        AINFO << "wait for: obstacle_id[" << obstacle_id << "] type["
                << obstacle_type_name << "] crosswalk_id[" << crosswalk_id
                << "]";
       } else {
@@ -291,7 +291,7 @@ bool Crosswalk::CheckStopForObstacle(
   bool in_expanded_crosswalk = crosswalk_exp_poly.IsPointIn(point);
 
   if (!in_expanded_crosswalk) {
-    ADEBUG << "skip: obstacle_id[" << obstacle_id << "] type["
+    AINFO << "skip: obstacle_id[" << obstacle_id << "] type["
            << obstacle_type_name << "] crosswalk_id[" << crosswalk_id
            << "]: not in crosswalk expanded area";
     return false;
@@ -312,7 +312,7 @@ bool Crosswalk::CheckStopForObstacle(
       reference_line.IsOnRoad(obstacle.PerceptionSLBoundary());
   const bool is_path_cross = !obstacle.reference_line_st_boundary().IsEmpty();
 
-  ADEBUG << "obstacle_id[" << obstacle_id << "] type[" << obstacle_type_name
+  AINFO << "obstacle_id[" << obstacle_id << "] type[" << obstacle_type_name
          << "] crosswalk_id[" << crosswalk_id << "] obstacle_l["
          << obstacle_sl_point.l() << "] within_expanded_crosswalk_area["
          << in_expanded_crosswalk << "] obstacle_l_distance["
@@ -325,7 +325,7 @@ bool Crosswalk::CheckStopForObstacle(
     //     STOP only if paths crosses
     if (is_path_cross) {
       stop = true;
-      ADEBUG << "need_stop(>=l2): obstacle_id[" << obstacle_id << "] type["
+      AINFO << "need_stop(>=l2): obstacle_id[" << obstacle_id << "] type["
              << obstacle_type_name << "] crosswalk_id[" << crosswalk_id << "]";
     }
   } else if (obstacle_l_distance <=
@@ -335,18 +335,19 @@ bool Crosswalk::CheckStopForObstacle(
       //     always STOP
       if (obstacle_sl_point.s() > adc_end_edge_s) {
         stop = true;
-        ADEBUG << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
+        AINFO << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
                << obstacle_type_name << "] s[" << obstacle_sl_point.s()
-               << "] adc_end_edge_s[ " << adc_end_edge_s << "] crosswalk_id["
+               << "] adc_end_edge_s[" << adc_end_edge_s << "] crosswalk_id["
                << crosswalk_id << "] ON_ROAD";
       }
     } else {
+      AINFO << "is_on_road = " << is_on_road;
       // (3) when l_distance <= strict_l_distance
       //     + NOT on_road(i.e. on crosswalk/median etc)
       //     STOP if paths cross
       if (is_path_cross) {
         stop = true;
-        ADEBUG << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
+        AINFO << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
                << obstacle_type_name << "] crosswalk_id[" << crosswalk_id
                << "] PATH_CRSOSS";
       } else {
@@ -365,7 +366,7 @@ bool Crosswalk::CheckStopForObstacle(
         const double kEpsilon = 1e-6;
         if (obstacle_v.InnerProd(obs_to_adc) > kEpsilon) {
           stop = true;
-          ADEBUG << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
+          AINFO << "need_stop(<=l1): obstacle_id[" << obstacle_id << "] type["
                  << obstacle_type_name << "] crosswalk_id[" << crosswalk_id
                  << "] MOVING_TOWARD_ADC";
         }
@@ -379,24 +380,26 @@ bool Crosswalk::CheckStopForObstacle(
     if (is_path_cross) {
       stop = true;
     }
-    ADEBUG << "need_stop(between l1 & l2): obstacle_id[" << obstacle_id
+    AINFO << "need_stop(between l1 & l2): obstacle_id[" << obstacle_id
            << "] type[" << obstacle_type_name << "] obstacle_l_distance["
            << obstacle_l_distance << "] crosswalk_id[" << crosswalk_id
            << "] USE_PREVIOUS_DECISION";
   }
 
   // check stop_deceleration
-  if (stop) {
-    if (stop_deceleration >= config_.crosswalk().max_stop_deceleration()) {
-      if (obstacle_l_distance > config_.crosswalk().stop_strict_l_distance()) {
-        // SKIP when stop_deceleration is too big but safe to ignore
-        stop = false;
-      }
-      AWARN << "crosswalk_id[" << crosswalk_id << "] stop_deceleration["
-            << stop_deceleration << "]";
-    }
-  }
+  // if (stop) {
+  //   if (stop_deceleration >= config_.crosswalk().max_stop_deceleration()) {
+  //     if (obstacle_l_distance > config_.crosswalk().stop_strict_l_distance()) {
+  //       // SKIP when stop_deceleration is too big but safe to ignore
+  //       stop = false;
+  //       AINFO<<"stop_decleration set stop[0]";
+  //     }
+  //     AWARN << "crosswalk_id[" << crosswalk_id << "] stop_deceleration["
+  //           << stop_deceleration << "]";
+  //   }
+  // }
 
+  AINFO<<"stop["<<stop<<"]";
   return stop;
 }
 
