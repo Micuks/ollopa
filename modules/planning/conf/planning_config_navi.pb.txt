@@ -56,9 +56,9 @@ planner_navi_config {
   }
 
   navi_obstacle_decider_config {
-    min_nudge_distance: 0.2
-    max_nudge_distance: 1.1
-    max_allow_nudge_speed: 16.667
+    min_nudge_distance: 1
+    max_nudge_distance: 1.5
+    max_allow_nudge_speed: 5
     safe_distance: 0.2
     nudge_allow_tolerance : 0.05
     cycles_number : 3
