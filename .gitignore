@@ -81,3 +81,6 @@ output
 
 # Flamegraph files
 tools/FlameGraph
+
+# patch file
+*.patch
